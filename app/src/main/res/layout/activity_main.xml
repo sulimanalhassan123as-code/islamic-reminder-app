@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0a1f14"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🕌 Islamic Reminder"
+            android:textColor="#d4af37"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Azan • 4 daily reminders • Friday special"
+            android:textColor="#8fae9c"
+            android:textSize="13sp"
+            android:layout_marginBottom="14dp" />
+
+        <!-- Next prayer card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#12291d"
+            android:padding="16dp"
+            android:layout_marginBottom="14dp">
+
+            <TextView
+                android:id="@+id/tvNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next: …"
+                android:textColor="#ffffff"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCountdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#d4af37"
+                android:textSize="15sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tvTimes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#cfe3d8"
+                android:textSize="13sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+        <!-- Permission card -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚙️ Make notifications work perfectly"
+            android:textColor="#d4af37"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All three must be ✅ — this is how the app stays reliable even when Android tries to sleep."
+            android:textColor="#8fae9c"
+            android:textSize="12sp"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="6dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="Notifications" android:textColor="#ffffff" android:textSize="14sp" />
+            <TextView android:id="@+id/stNotif" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="…" android:textColor="#ffffff" android:textSize="13sp" android:paddingEnd="8dp" />
+            <Button android:id="@+id/btnNotif" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Enable" android:textSize="12sp" android:minHeight="36dp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="6dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="Exact alarms (critical)" android:textColor="#ffffff" android:textSize="14sp" />
+            <TextView android:id="@+id/stExact" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="…" android:textColor="#ffffff" android:textSize="13sp" android:paddingEnd="8dp" />
+            <Button android:id="@+id/btnExact" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Enable" android:textSize="12sp" android:minHeight="36dp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="6dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="Battery: no restrictions" android:textColor="#ffffff" android:textSize="14sp" />
+            <TextView android:id="@+id/stBattery" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="…" android:textColor="#ffffff" android:textSize="13sp" android:paddingEnd="8dp" />
+            <Button android:id="@+id/btnBattery" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Enable" android:textSize="12sp" android:minHeight="36dp" />
+        </LinearLayout>
+
+        <!-- Toggles -->
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="🔔 Reminders" android:textColor="#d4af37" android:textSize="15sp"
+            android:textStyle="bold" android:layout_marginTop="14dp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="8dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="🕌 Azan at prayer time (5x daily)" android:textColor="#ffffff" android:textSize="14sp" />
+            <Switch android:id="@+id/swAzan" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="8dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="📖 Daily reminder (4x: morning, noon, afternoon, evening)" android:textColor="#ffffff" android:textSize="14sp" />
+            <Switch android:id="@+id/swDaily" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="8dp">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="🌟 Friday special (Jumu'ah reminder)" android:textColor="#ffffff" android:textSize="14sp" />
+            <Switch android:id="@+id/swFriday" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Test buttons -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
+            <Button android:id="@+id/btnTestNotif" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="Test notification" android:textSize="12sp" android:layout_marginEnd="5dp" />
+            <Button android:id="@+id/btnTestAzan" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="Test azan 🔊" android:textSize="12sp" android:layout_marginStart="5dp" />
+        </LinearLayout>
+
+        <Button android:id="@+id/btnAdmin" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Admin info" android:textSize="12sp" android:layout_marginTop="10dp" />
+
+        <TextView android:id="@+id/stRegistered"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="" android:textColor="#8fae9c" android:textSize="12sp"
+            android:layout_marginTop="14dp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Never Hide Tech Empire • v1.0" android:textColor="#5d7a6b"
+            android:textSize="11sp" android:layout_marginTop="6dp" />
+    </LinearLayout>
+</ScrollView>

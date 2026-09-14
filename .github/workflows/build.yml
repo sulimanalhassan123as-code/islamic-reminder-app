@@ -1,0 +1,67 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Accept Android SDK licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+
+      - name: Ensure SDK components
+        run: "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
+
+      - name: Ensure signing keystore exists
+        run: |
+          if [ ! -f keystore.jks ]; then
+            keytool -genkeypair -keystore keystore.jks \
+              -storepass neverhide2026 -keypass neverhide2026 \
+              -alias reminder -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Never Hide, OU=Never Hide Tech Empire, O=Never Hide, L=Accra, C=GH"
+            git config user.name "Never Hide CI"
+            git config user.email "ci@neverhide.tech"
+            git add keystore.jks
+            git commit -m "ci: add signing keystore"
+            git push
+            echo "KEYSTORE_CREATED_AND_PUSHED"
+          else
+            echo "KEYSTORE_ALREADY_PRESENT"
+          fi
+
+      - name: Build release APK
+        run: |
+          gradle wrapper --gradle-version 8.9 --distribution-type bin
+          ./gradlew --no-daemon assembleRelease
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: islamic-reminder-apk
+          path: app/build/outputs/apk/release/app-release.apk
+          retention-days: 90
+
+      - name: Also attach APK to run (easier download)
+        run: cp app/build/outputs/apk/release/app-release.apk IslamicReminder-1.0.apk
+
+      - name: Upload APK (direct file)
+        uses: actions/upload-artifact@v4
+        with:
+          name: IslamicReminder-APK
+          path: IslamicReminder-1.0.apk
+          retention-days: 90

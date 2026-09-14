@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Islamic Reminder — Admin</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0a1f14; color: #e8f2ec; min-height: 100vh; display: flex; justify-content: center; padding: 20px; }
+  .wrap { width: 100%; max-width: 520px; }
+  .card { background: #12291d; border-radius: 14px; padding: 22px; margin-bottom: 16px; border: 1px solid #1e3d2c; }
+  h1 { color: #d4af37; font-size: 22px; margin-bottom: 2px; }
+  .sub { color: #8fae9c; font-size: 13px; margin-bottom: 18px; }
+  input, textarea { width: 100%; background: #0a1f14; border: 1px solid #2a4a37; color: #fff; padding: 12px; border-radius: 8px; font-size: 15px; margin-bottom: 12px; }
+  input:focus, textarea:focus { outline: none; border-color: #d4af37; }
+  textarea { min-height: 90px; resize: vertical; }
+  button { background: #d4af37; color: #0a1f14; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; width: 100%; }
+  button:active { opacity: 0.85; }
+  button.sec { background: #1e3d2c; color: #d4af37; margin-top: 8px; }
+  .stats { display: flex; gap: 12px; margin-bottom: 4px; }
+  .stat { flex: 1; background: #0a1f14; border-radius: 10px; padding: 14px; text-align: center; }
+  .stat .num { color: #d4af37; font-size: 28px; font-weight: 800; }
+  .stat .lbl { color: #8fae9c; font-size: 12px; margin-top: 4px; }
+  .msg { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; display: none; }
+  .msg.err { background: #3d1e1e; color: #ff9c9c; display: block; }
+  .msg.ok { background: #1e3d2c; color: #9ce8b8; display: block; }
+  .hist { background: #0a1f14; border-radius: 10px; padding: 12px 14px; margin-top: 8px; font-size: 13px; color: #cfe3d8; }
+  .hist b { color: #d4af37; }
+  .hist .when { color: #6b8a7a; font-size: 11px; }
+  #dash { display: none; }
+  .foot { text-align: center; color: #5d7a6b; font-size: 11px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>🕌 Islamic Reminder</h1>
+    <div class="sub">Admin Panel — Never Hide Tech Empire</div>
+
+    <div id="loginBox">
+      <div id="loginMsg" class="msg"></div>
+      <input id="pw" type="password" placeholder="Admin password" autocomplete="current-password">
+      <button onclick="login()">Log in</button>
+    </div>
+
+    <div id="dash">
+      <div class="stats">
+        <div class="stat"><div class="num" id="totalUsers">–</div><div class="lbl">Total users</div></div>
+        <div class="stat"><div class="num" id="activeUsers">–</div><div class="lbl">Active (7 days)</div></div>
+      </div>
+
+      <div style="margin-top:16px"></div>
+      <div class="card" style="margin-bottom:0">
+        <b style="color:#d4af37">📢 Send notification to all users</b>
+        <div style="height:12px"></div>
+        <div id="sendMsg" class="msg"></div>
+        <input id="bTitle" placeholder="Title (e.g. Ramadan Mubarak)">
+        <textarea id="bBody" placeholder="Your message to every user..."></textarea>
+        <button onclick="sendBroadcast()">Send to everyone</button>
+        <button class="sec" onclick="loadStats()">Refresh stats</button>
+      </div>
+
+      <div style="margin-top:16px"></div>
+      <div class="card" style="margin-bottom:0">
+        <b style="color:#d4af37">📜 Recent broadcasts</b>
+        <div id="hist"></div>
+      </div>
+
+      <div class="foot">Users receive notifications within ~30 minutes (or instantly on next app open).</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '/api/admin';
+let authed = false;
+
+async function api(payload) {
+  const r = await fetch(API, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  return { status: r.status, data: await r.json() };
+}
+
+async function login() {
+  const pw = document.getElementById('pw').value;
+  const msg = document.getElementById('loginMsg');
+  const { status, data } = await api({ action: 'auth', password: pw });
+  if (status === 200 && data.ok) {
+    authed = true;
+    sessionStorage.setItem('ir_admin', pw);
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('dash').style.display = 'block';
+    renderStats(data);
+  } else {
+    msg.className = 'msg err';
+    msg.textContent = 'Wrong password.';
+  }
+}
+
+function renderStats(data) {
+  document.getElementById('totalUsers').textContent = data.total_users;
+  document.getElementById('activeUsers').textContent = data.active_users_7d;
+  const h = document.getElementById('hist');
+  h.innerHTML = (data.broadcasts && data.broadcasts.length)
+    ? data.broadcasts.map(b =>
+        `<div class="hist"><b>${esc(b.title || '')}</b><br>${esc((b.body || '').slice(0, 120))}<br><span class="when">${b.when}</span></div>`
+      ).join('')
+    : '<div class="hist">No broadcasts yet.</div>';
+}
+
+async function loadStats() {
+  const pw = sessionStorage.getItem('ir_admin');
+  if (!pw) return;
+  const { status, data } = await api({ action: 'stats', password: pw });
+  if (status === 200 && data.ok) renderStats(data);
+}
+
+async function sendBroadcast() {
+  const pw = sessionStorage.getItem('ir_admin');
+  const title = document.getElementById('bTitle').value.trim();
+  const message = document.getElementById('bBody').value.trim();
+  const msg = document.getElementById('sendMsg');
+  if (!title || !message) {
+    msg.className = 'msg err'; msg.textContent = 'Title and message required.';
+    return;
+  }
+  msg.className = 'msg ok'; msg.textContent = 'Sending…';
+  const { status, data } = await api({ action: 'broadcast', password: pw, title, message });
+  if (status === 200 && data.ok) {
+    msg.className = 'msg ok'; msg.textContent = '✅ Sent! Users will receive it shortly.';
+    document.getElementById('bTitle').value = '';
+    document.getElementById('bBody').value = '';
+    loadStats();
+  } else {
+    msg.className = 'msg err'; msg.textContent = data.error || 'Failed.';
+  }
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+</script>
+</body>
+</html>
