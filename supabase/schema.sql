@@ -15,14 +15,19 @@ create table if not exists public.islamic_app_users (
 
 alter table public.islamic_app_users enable row level security;
 
--- App can register itself + update its last_seen (for activity stats)
+-- App can register itself, update its last_seen, and read rows
+-- (SELECT policy is REQUIRED for upserts: ON CONFLICT must see the conflicting row)
 drop policy if exists "app_insert" on public.islamic_app_users;
 create policy "app_insert" on public.islamic_app_users
   for insert to anon with check (true);
 
-drop policy if exists "app_update_seen" on public.islamic_app_users;
-create policy "app_update_seen" on public.islamic_app_users
+drop policy if exists "app_update" on public.islamic_app_users;
+create policy "app_update" on public.islamic_app_users
   for update to anon using (true) with check (true);
+
+drop policy if exists "app_select" on public.islamic_app_users;
+create policy "app_select" on public.islamic_app_users
+  for select to anon using (true);
 
 -- 2) Broadcasts: admin → all users
 create table if not exists public.islamic_broadcasts (
