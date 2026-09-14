@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gentle Islamic Reminder — Azan & Daily Reminders</title>
+<meta name="description" content="A gentle companion that keeps your prayers and your heart on time. Azan at all 5 prayer times, 4 daily reminders, and a special Friday reminder — all offline, no internet needed.">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', -apple-system, Roboto, sans-serif; background: #072317; color: #eef7f0; line-height: 1.6; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+  header {
+    background: radial-gradient(1200px 600px at 70% -10%, #0e5738 0%, #072317 60%), linear-gradient(160deg, #062014, #0a2e1e);
+    border-bottom: 1px solid rgba(212,175,55,.25); padding: 70px 0 90px; position: relative; overflow: hidden;
+  }
+  header::before { content: ""; position: absolute; right: -30px; top: -40px; font-size: 340px; color: rgba(212,175,55,.06); transform: rotate(-15deg); }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 46px; }
+  .brand .dot { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(145deg, #d4af37, #9c7c1e); display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 6px 18px rgba(212,175,55,.35); }
+  .brand b { font-size: 20px; letter-spacing: .4px; }
+  .brand span { color: #d4af37; }
+  .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+  .pill { display: inline-block; background: rgba(212,175,55,.14); color: #e9ce78; border: 1px solid rgba(212,175,55,.4); padding: 6px 16px; border-radius: 999px; font-size: 13px; letter-spacing: .6px; margin-bottom: 20px; }
+  h1 { font-size: clamp(34px, 5vw, 52px); line-height: 1.15; font-weight: 800; }
+  h1 em { font-style: normal; color: #d4af37; }
+  .sub { color: #b9d3c4; font-size: 18px; margin: 18px 0 30px; max-width: 480px; }
+  .cta { display: inline-flex; align-items: center; gap: 12px; background: linear-gradient(145deg, #d4af37, #b8912a); color: #072317; font-weight: 700; font-size: 17px; padding: 15px 30px; border-radius: 14px; text-decoration: none; box-shadow: 0 10px 28px rgba(212,175,55,.35); transition: transform .15s ease; }
+  .cta:hover { transform: translateY(-2px); }
+  .cta small { display: block; font-size: 11.5px; font-weight: 600; opacity: .8; }
+  .meta { margin-top: 18px; font-size: 13px; color: #8fb3a0; }
+  .phone { width: 270px; margin: 0 auto; border-radius: 38px; padding: 12px; background: linear-gradient(160deg, #1d2b23, #0d1a12); border: 1px solid rgba(212,175,55,.35); box-shadow: 0 30px 60px rgba(0,0,0,.5); transform: rotate(3deg); }
+  .screen { background: linear-gradient(180deg, #0a2e1e, #06180f); border-radius: 28px; overflow: hidden; }
+  .notch { width: 90px; height: 20px; background: #06180f; margin: 0 auto; border-radius: 0 0 12px 12px; }
+  .s-head { text-align: center; padding: 10px 14px 4px; }
+  .s-head .t { font-size: 15px; color: #d4af37; font-weight: 700; }
+  .s-head .d { font-size: 10.5px; color: #7ea38c; }
+  .card { margin: 9px 12px; padding: 11px 14px; border-radius: 14px; background: rgba(255,255,255,.05); border: 1px solid rgba(212,175,55,.18); }
+  .card .lbl { font-size: 10px; color: #8fb3a0; text-transform: uppercase; letter-spacing: 1px; }
+  .card .val { font-size: 16px; font-weight: 700; color: #eef7f0; margin-top: 2px; }
+  .card.gold .val { color: #e9ce78; }
+  .card.azan { background: linear-gradient(145deg, rgba(212,175,55,.22), rgba(212,175,55,.08)); border-color: rgba(212,175,55,.45); }
+  .card .time { float: right; font-size: 15px; color: #d4af37; font-weight: 700; }
+  .s-foot { text-align: center; padding: 8px 0 14px; font-size: 10px; color: #7ea38c; }
+  section { padding: 72px 0; }
+  h2 { font-size: clamp(26px, 3.6vw, 38px); text-align: center; font-weight: 800; }
+  h2 + .lead { text-align: center; color: #8fb3a0; margin: 12px auto 46px; max-width: 560px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .feat { background: linear-gradient(170deg, #0c301f, #072317); border: 1px solid rgba(212,175,55,.2); border-radius: 20px; padding: 28px 24px; transition: transform .15s ease, border-color .15s ease; }
+  .feat:hover { transform: translateY(-4px); border-color: rgba(212,175,55,.5); }
+  .feat .ic { width: 52px; height: 52px; border-radius: 16px; font-size: 26px; background: rgba(212,175,55,.12); border: 1px solid rgba(212,175,55,.3); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .feat h3 { font-size: 18px; margin-bottom: 8px; color: #eef7f0; }
+  .feat p { font-size: 14.5px; color: #a8c6b5; }
+  .sched { max-width: 640px; margin: 0 auto; }
+  .srow { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; border-radius: 14px; margin-bottom: 10px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); }
+  .srow b { font-size: 17px; }
+  .srow span { color: #d4af37; font-weight: 700; font-size: 17px; }
+  .srow.fri { background: linear-gradient(145deg, rgba(212,175,55,.16), rgba(212,175,55,.05)); border-color: rgba(212,175,55,.4); }
+  .quote { text-align: center; padding: 60px 24px; border-radius: 24px; background: linear-gradient(160deg, #0c301f, #072317); border: 1px solid rgba(212,175,55,.25); }
+  .quote .ar { font-size: 30px; color: #d4af37; margin-bottom: 14px; }
+  .quote .en { font-size: 19px; color: #d4f0de; max-width: 620px; margin: 0 auto; }
+  .quote .ref { margin-top: 16px; color: #8fb3a0; font-size: 14px; }
+  #download { text-align: center; }
+  .dl-box { display: inline-block; padding: 44px 52px; border-radius: 26px; background: linear-gradient(160deg, #0e5738, #072317); border: 1px solid rgba(212,175,55,.35); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+  .dl-box h3 { font-size: 24px; margin-bottom: 8px; }
+  .dl-box p { color: #b9d3c4; font-size: 15px; margin-bottom: 24px; }
+  .reqs { font-size: 13px; color: #8fb3a0; margin-top: 18px; }
+  footer { border-top: 1px solid rgba(212,175,55,.2); padding: 34px 0 44px; text-align: center; color: #7ea38c; font-size: 14px; }
+  footer b { color: #d4af37; }
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; text-align: center; }
+    .sub { margin-left: auto; margin-right: auto; }
+    .grid { grid-template-columns: 1fr; }
+    .phone { transform: none; margin-top: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><div class="dot">🕌</div><b>Gentle Islamic <span>Reminder</span></b></div>
+    <div class="hero">
+      <div>
+        <span class="pill">✨ FREE • NO ADS • WORKS OFFLINE</span>
+        <h1>Keep your prayers <em>on time</em>,<br>keep your heart <em>at peace</em>.</h1>
+        <p class="sub">A gentle companion that reminds you of every prayer with azan, lifts your spirit four times a day, and never forgets Friday — even without internet.</p>
+        <a class="cta" href="https://github.com/sulimanalhassan123as-code/islamic-reminder-app/releases/download/v1.0/IslamicReminder-1.0.apk">
+          ⬇ Download the App
+          <small>Android APK • 4 MB • Free forever</small>
+        </a>
+        <p class="meta">Direct install — no Play Store needed. Works on all Android phones.</p>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <div class="notch"></div>
+          <div class="s-head">
+            <div class="t">🕌 Gentle Islamic Reminder</div>
+            <div class="d">As-salamu alaykum 🌙</div>
+          </div>
+          <div class="card azan"><span class="time">04:45</span><div class="lbl">Azan — Fajr</div><div class="val">Subh prayer</div></div>
+          <div class="card"><span class="time">12:15</span><div class="lbl">Azan — Zuhr</div><div class="val">Midday prayer</div></div>
+          <div class="card gold"><span class="time">Fri 12:30</span><div class="lbl">Jumu'ah</div><div class="val">Friday reminder 🕋</div></div>
+          <div class="card"><span class="time">07:00</span><div class="lbl">Daily reminder</div><div class="val">"Verily, with hardship comes ease."</div></div>
+          <div class="s-foot">Next azan: Asr — 15:30</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Everything a believer needs, nothing more.</h2>
+    <p class="lead">No clutter, no ads, no distractions. Just your deen, on time.</p>
+    <div class="grid">
+      <div class="feat"><div class="ic">🔊</div><h3>Azan at All 5 Prayers</h3><p>Fajr, Zuhr, Asr, Maghrib and Isha — a real azan sound plays at each prayer time, every single day, automatically.</p></div>
+      <div class="feat"><div class="ic">💚</div><h3>4 Daily Heart Reminders</h3><p>Gentle Islamic motivation at morning, midday, evening and night — Quranic wisdom and dhikr to keep your heart soft.</p></div>
+      <div class="feat"><div class="ic">🕋</div><h3>Special Friday Reminder</h3><p>A dedicated Jumu'ah reminder every Friday so you never miss the khutbah — the best day of the week, honoured.</p></div>
+      <div class="feat"><div class="ic">📴</div><h3>100% Offline</h3><p>After installing, no internet needed. Your reminders work in the village, on a plane, anywhere — always on time.</p></div>
+      <div class="feat"><div class="ic">🔔</div><h3>Never Silenced</h3><p>Smart notification design resists Android battery optimization, so reminders arrive even after your phone sleeps.</p></div>
+      <div class="feat"><div class="ic">🤲</div><h3>Built with Love</h3><p>Handcrafted in Accra, Ghana by Never Hide Tech — a sadaqah for every Muslim who downloads it. Free forever.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#06180f; border-top:1px solid rgba(212,175,55,.15); border-bottom:1px solid rgba(212,175,55,.15);">
+  <div class="wrap">
+    <h2>Your daily rhythm 🌙</h2>
+    <p class="lead">Default times shown for Accra — everything is adjustable inside the app.</p>
+    <div class="sched">
+      <div class="srow"><b>🌄 Fajr</b><span>04:45</span></div>
+      <div class="srow"><b>☀️ Zuhr</b><span>12:15</span></div>
+      <div class="srow"><b>🌤 Asr</b><span>15:30</span></div>
+      <div class="srow"><b>🌇 Maghrib</b><span>18:10</span></div>
+      <div class="srow"><b>🌙 Isha</b><span>19:25</span></div>
+      <div class="srow fri"><b>🕋 Jumu'ah — every Friday</b><span>12:30</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="quote">
+      <div class="ar">﷽</div>
+      <p class="en">"Indeed, prayer has been decreed upon the believers at specified times."</p>
+      <p class="ref">— Qur'an 4:103</p>
+    </div>
+  </div>
+</section>
+
+<section id="download" style="background:#06180f; border-top:1px solid rgba(212,175,55,.15);">
+  <div class="wrap">
+    <div class="dl-box">
+      <h3>Ready to never miss a prayer?</h3>
+      <p>Download once. Be reminded forever, insha'Allah.</p>
+      <a class="cta" href="https://github.com/sulimanalhassan123as-code/islamic-reminder-app/releases/download/v1.0/IslamicReminder-1.0.apk">
+        ⬇ Get the APK (4 MB)
+      </a>
+      <p class="reqs">Android 7.0+ • Allow "install unknown apps" when prompted • No sign-up, no ads, no tracking</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>Gentle Islamic Reminder</b> — a Never Hide Tech Empire project 🇬🇭<br>
+    Made with love for the Ummah • © 2026
+  </div>
+</footer>
+
+</body>
+</html>
