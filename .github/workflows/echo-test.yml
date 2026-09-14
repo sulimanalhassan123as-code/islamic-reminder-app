@@ -1,0 +1,8 @@
+name: Echo Test
+on: [push, workflow_dispatch]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say hello
+        run: echo "hello from runner"
