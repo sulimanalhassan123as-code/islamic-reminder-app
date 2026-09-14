@@ -23,7 +23,7 @@ object AlarmPlanner {
     const val ACTION_RESCHEDULE = "com.neverhide.RESCHEDULE"
     const val ACTION_SYNC = "com.neverhide.SYNC"
 
-    private const val DAILY_SLOTS = doubleArrayOf(6.0, 12.15, 16.0, 20.0) // 4 reminders/day
+    private val DAILY_SLOTS = doubleArrayOf(6.0, 12.15, 16.0, 20.0) // 4 reminders/day
     private const val FRIDAY_SLOT = 8.0
 
     fun scheduleAll(ctx: Context) {
