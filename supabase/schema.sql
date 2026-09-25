@@ -29,6 +29,20 @@ drop policy if exists "app_select" on public.islamic_app_users;
 create policy "app_select" on public.islamic_app_users
   for select to anon using (true);
 
+-- NOTE: PostgreSQL requires table-wide SELECT for the APK's ON CONFLICT
+-- upsert, so rows stay visible to the anon key. Hardening is done with
+-- column-level privileges instead (applied 2026-09-25 security audit):
+--   revoke select on public.islamic_app_users from anon;
+--   grant select (id, device_id, app_version, city, created_at, last_seen)
+--     on public.islamic_app_users to anon;
+--   revoke update on public.islamic_app_users from anon;
+--   grant update (device_id, app_version, city, last_seen)
+--     on public.islamic_app_users to anon;
+--   revoke insert (id, created_at) on public.islamic_app_users from anon;
+-- The table holds only anonymous metrics (device UUID, city, version,
+-- timestamps) - no names, phones or tokens. Full lockdown (header-based
+-- auth like the Empire app) is planned for APK v2.
+
 -- 2) Broadcasts: admin → all users
 create table if not exists public.islamic_broadcasts (
   id bigint generated always as identity primary key,
