@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -9,7 +11,7 @@ val keystoreFile = rootProject.file("keystore.jks")
 // CI workflow, while the keystore itself was committed to this public repo.
 // The key has been rotated. Credentials now come from local.properties for
 // local builds, or from CI secrets exposed as environment variables.
-val localProps = java.util.Properties().apply {
+val localProps = Properties().apply {
     val f = rootProject.file("local.properties")
     if (f.exists()) f.inputStream().use { load(it) }
 }
