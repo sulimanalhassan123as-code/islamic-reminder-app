@@ -50,7 +50,7 @@ jobs:
           KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
           KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
         run: |
-          gradle wrapper --gradle-version 8.9 --distribution-type bin
+          gradle wrapper --gradle-version 8.11.1 --distribution-type bin
           ./gradlew --no-daemon assembleRelease
 
       - name: Upload APK artifact
