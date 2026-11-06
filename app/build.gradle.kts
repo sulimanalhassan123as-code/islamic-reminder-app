@@ -20,14 +20,14 @@ fun signingSecret(key: String, env: String): String =
 
 android {
     namespace = "com.neverhide.islamicreminder"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.neverhide.islamicreminder"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 2
+        versionName = "1.0.1"
     }
 
     if (keystoreFile.exists() && signingSecret("keystore.storePassword", "KEYSTORE_STORE_PASSWORD").isNotEmpty()) {
