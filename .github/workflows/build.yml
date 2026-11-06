@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - name: Checkout
@@ -27,26 +27,28 @@ jobs:
 
       - name: Ensure SDK components
         run: |
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-34" "build-tools;34.0.0" > /dev/null
 
-      - name: Ensure signing keystore exists
+      # SECURITY (2026-11-06): this step used to hardcode the keystore password
+      # and then commit the generated keystore into this PUBLIC repository.
+      # The signing key has been rotated. The new keystore travels as a hex repo
+      # secret and is written to the ephemeral runner only. It is never committed.
+      - name: Materialise signing keystore from secret
+        env:
+          KEYSTORE_HEX: ${{ secrets.KEYSTORE_HEX }}
         run: |
-          if [ ! -f keystore.jks ]; then
-            keytool -genkeypair -keystore keystore.jks \
-              -storepass neverhide2026 -keypass neverhide2026 \
-              -alias reminder -keyalg RSA -keysize 2048 -validity 10000 \
-              -dname "CN=Never Hide, OU=Never Hide Tech Empire, O=Never Hide, L=Accra, C=GH"
-            git config user.name "Never Hide CI"
-            git config user.email "ci@neverhide.tech"
-            git add keystore.jks
-            git commit -m "ci: add signing keystore"
-            git push
-            echo "KEYSTORE_CREATED_AND_PUSHED"
-          else
-            echo "KEYSTORE_ALREADY_PRESENT"
+          if [ -z "$KEYSTORE_HEX" ]; then
+            echo "::error::KEYSTORE_HEX secret is missing, cannot sign the release build."
+            exit 1
           fi
+          printf '%s' "$KEYSTORE_HEX" | xxd -r -p > keystore.jks
+          test -s keystore.jks || { echo "::error::keystore decode produced an empty file"; exit 1; }
+          echo "keystore materialised: $(wc -c < keystore.jks) bytes"
 
       - name: Build release APK
+        env:
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
         run: |
           gradle wrapper --gradle-version 8.9 --distribution-type bin
           ./gradlew --no-daemon assembleRelease
@@ -58,7 +60,7 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
           retention-days: 90
 
-      - name: Also attach APK to run (easier download)
+      - name: Copy APK to friendly name
         run: cp app/build/outputs/apk/release/app-release.apk IslamicReminder-1.0.apk
 
       - name: Upload APK (direct file)
