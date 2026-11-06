@@ -1,5 +1,9 @@
-.gradle/
-build/
+# signing material — never commit
+keystore.jks
+*.jks
+*.p12
+*.keystore
+
+# local secrets
 local.properties
-*.iml
-.idea/
+.env
